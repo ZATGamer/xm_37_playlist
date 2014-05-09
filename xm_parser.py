@@ -1,6 +1,7 @@
 # This will take in a raw CSV file and return a CSV file with all the duplicates removed.
 
 import csv
+import os
 from lxml.html import parse
 
 
@@ -42,41 +43,18 @@ if __name__ == '__main__':
         for row in crap_data:
             crap.append(row)
 
-    try:
-        with open('songs_have.csv', 'rU') as songs_csv_file:
-            have_data = csv.reader(songs_csv_file)
-            for row in have_data:
-                have_songs.append(row)
-    except IOError:
+    for song in songs:
+        if song not in trim_songs and song not in crap:
+            trim_songs.append(song)
 
-    # have_songs = []
-    # with open('songs_have.csv', 'rU') as songs_csv_file:
-    #     have_data = csv.reader(songs_csv_file)
-    #     for row in have_data:
-    #         have_songs.append(row)
+    print len(songs)
+    print len(trim_songs)
 
-        for song in songs:
-            if song not in trim_songs and song not in crap and song not in have_songs:
-                trim_songs.append(song)
+    trim_songs.sort()
 
-        print len(songs)
-        print len(trim_songs)
-        print trim_songs
+    os.remove('songs_have.csv')
 
-
-
-# with open('test.csv', 'rU') as csv_file:
-#     song_data = csv.reader(csv_file)
-#     for row in song_data:
-#         if row not in trim_songs:
-#             trim_songs.append(row)
-
-        trim_songs.sort()
-
-        for row in trim_songs:
-            with open('songs_have.csv', 'ab') as output_file:
-                output_data = csv.writer(output_file)
-                output_data.writerow(row)
-
-        print trim_songs
-
+    for row in trim_songs:
+        with open('songs_have.csv', 'ab') as output_file:
+            output_data = csv.writer(output_file)
+            output_data.writerow(row)
